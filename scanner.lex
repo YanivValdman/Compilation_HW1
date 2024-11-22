@@ -8,6 +8,8 @@
 whitespace  ([\r\t\n ])
 binary_op   ([+\-*/])
 relop       (==|!=|<|>|<=|>=)
+num         ([1-9][0-9]*|0)
+num_b       (0b|{num}b)
 
 %%
 void                                return VOID;
@@ -35,7 +37,8 @@ continue                            return CONTINUE;
 {relop}                             return RELOP;
 {binary_op}                         return BINOP;
 [a-zA-Z][a-zA-Z0-9]*                return ID;
-[1-9]+[0-9]*|0                      return NUM;
+{num}                               return NUM;
+{num_b}                             return NUM_B;
 \"([^\"\n\r\\]|\\[rnt\"\\])+\"      return STRING;
 \/\/([^\r\n]*) ;
 {whitespace} ;

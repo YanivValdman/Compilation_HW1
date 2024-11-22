@@ -1,0 +1,8 @@
+// this is a legal comment
+// this comment has LF \n what will happen
+sothisisntcomment
+// this comment has CR \r what will happen
+sothisisntcomment
+// this comment has CRLF \r\n
+sothisisntcomment
+// this comment has CRLF \r\n what will happen
