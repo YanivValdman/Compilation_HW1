@@ -40,7 +40,7 @@ continue                            return CONTINUE;
 {num}                               return NUM;
 {num_b}                             return NUM_B;
 \"([^\"\n\r\\]|\\[rnt\"\\])+\"      return STRING;
-\/\/([^\r\n]*) ;
+\/\/([^\r\n]*)                      return COMMENT;
 {whitespace} ;
 . output::errorUnknownChar(*yytext); exit(0);
 %%
