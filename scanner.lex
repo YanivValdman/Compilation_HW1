@@ -20,8 +20,10 @@ printable_characters                ({ascii_x20_to_x21}|{ascii_x23_to_x5B}|{asci
 legal_hex_pattern                   (x[2-6][0-9a-fA-F]|x7[0-9a-eA-E])
 legal_escape_pattern                ([\\ntr\"0])
 legal_string                        ({printable_characters}|\\{legal_hex_pattern}|\\{legal_escape_pattern})*
-illegal_hex_pattern                 (x[2-6][^0-9a-fA-F]|x7[^0-9a-eA-E]|[^2-7][0-9a-fA-F]|[2-7][^0-9a-fA-F])
-illegal_escape_pattern              ([^\\ntr\"0])
+illegal_hex_range                   (x[2-6][^0-9a-fA-F]|x7[^0-9a-eA-E]|x[^2-7][0-9a-fA-F]|x[2-7][^0-9a-fA-F])
+illegal_hex_length                  (x|x[.])
+illegal_hex_pattern                 ({illegal_hex_range}|{illegal_hex_length})
+illegal_escape_pattern              ([^\\ntr\"0x])
 
 
 
@@ -55,10 +57,11 @@ continue                                            return CONTINUE;
 {num}                                               return NUM;
 {num_b}                                             return NUM_B;
 \/\/([^\r\n]*)                                      return COMMENT;
-\"{legal_string}                                    return output::errorUnclosedString();
-\"({legal_string}|\\{illegal_escape_pattern})*      return output::errorUndefinedEscape();
-\"({legal_string}|\\{illegal_hex_pattern})*         return output::errorUnknownChar();
-\"{legal_string}\"                                  printString();
-{whitespace} ;
-. output::errorUnknownChar(*yytext); exit(0);
+\"{legal_string}\"                                  return STRING;
+\"{legal_string}                                    output::errorUnclosedString();
+\"{legal_string}\\{illegal_hex_pattern}             output::errorUndefinedEscape("illegal_hex_pattern");
+\"{legal_string}\\{illegal_escape_pattern}          output::errorUndefinedEscape("illegal_escape_pattern");
+{whitespace}                                        ;
+.                                                   output::errorUnknownChar(*yytext);
 %%
+
