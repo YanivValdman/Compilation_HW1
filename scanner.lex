@@ -11,6 +11,8 @@
 whitespace                          ([\r\t\n ])
 binary_op                           ([+\-*/])
 relop                               (==|!=|<|>|<=|>=)
+id                                  ([a-zA-Z][a-zA-Z0-9]*)
+comment                             (\/\/([^\r\n]*))
 num                                 ([1-9][0-9]*|0)
 num_b                               (0b|{num}b)
 ascii_x20_to_x21                    ([ !])
@@ -53,10 +55,10 @@ continue                                            return CONTINUE;
 "="                                                 return ASSIGN;
 {relop}                                             return RELOP;
 {binary_op}                                         return BINOP;
-[a-zA-Z][a-zA-Z0-9]*                                return ID;
+{id}                                                return ID;
 {num}                                               return NUM;
 {num_b}                                             return NUM_B;
-\/\/([^\r\n]*)                                      return COMMENT;
+{comment}                                      return COMMENT;
 \"{legal_string}\"                                  return STRING;
 \"{legal_string}                                    output::errorUnclosedString();
 \"{legal_string}\\{illegal_hex_pattern}             output::errorUndefinedEscape("illegal_hex_pattern");
