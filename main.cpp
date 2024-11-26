@@ -11,6 +11,7 @@ const char *  handleString(char *yytext){
     // 2. transform hex pattern to matching ascii character (e.g the substring "\x23" should be printed as #)
 
     std::string s = yytext;
+    std::string res;
     std::cout << s << std::endl;
     std::cout << "string len" << s.length() << std::endl;
     assert(s.length() >= MIN_STR_LEN);
@@ -19,11 +20,47 @@ const char *  handleString(char *yytext){
         //start of an escape seq.
         if (s[i] == '\\') {
             //hex seq.
-            if(i + 1 <= s.length() && s[i + 1] == 'x');
+            if(i + 1 <= s.length() && s[i + 1] == 'x')
+            {
+                int hexStart = i + 2;
+                int hexLen = 2;
+                std::string hexStr = s.substr(hexStart, hexLen);
+                char asciiChar = static_cast<char>(std::stoi(hexStr, nullptr, 16));
+                i += 3; //only +3 because the loop will add another 1
+                // handle the character
+                res += asciiChar;
+            }
+            else if(i + 1 <= s.length() && s[i + 1] == '0')
+            {
+                res += '\0';
+            }
+            else if(i + 1 <= s.length() && s[i + 1] == 't')
+            {
+                res += '\t';
+            }
+            else if(i + 1 <= s.length() && s[i + 1] == 'r')
+            {
+                res += '\r';
+            }
+            else if(i + 1 <= s.length() && s[i + 1] == 'n')
+            {
+                res += '\n';
+            }
+            else if(i + 1 <= s.length() && s[i + 1] == '\"')
+            {
+                res += '\"';
+            }
+            else
+            {
+                res += '\\';
+            }
+        }
+        else
+        {
+            res += s[i];
         }
     }
-
-    return "a";
+    return res.c_str();
 }
 
 int main() {
