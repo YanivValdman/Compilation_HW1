@@ -1,1 +1,2 @@
-"string \x22"
+"\\"
+"string \x22   \x57  \x5F  \x5f"

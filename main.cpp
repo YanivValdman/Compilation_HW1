@@ -6,16 +6,16 @@
 #include <assert.h>
 #define MIN_STR_LEN 2
 
-const char *  handleString(char *yytext){
+void  handleString(std::string& str, char *yytext){
     // 1. Remove ""
     // 2. transform hex pattern to matching ascii character (e.g the substring "\x23" should be printed as #)
 
     std::string s = yytext;
-    std::string res;
-    std::cout << s << std::endl;
-    std::cout << "string len" << s.length() << std::endl;
+    // std::string res;
+    // std::cout << s << std::endl;
+    // std::cout << "string len" << s.length() << std::endl;
     assert(s.length() >= MIN_STR_LEN);
-    if(s.length() == MIN_STR_LEN) return "";
+    if(s.length() == MIN_STR_LEN) return;
     for (size_t i = 1; i < s.length() - 1; ++i) { //This loop ignores the first and last characters, ' " '
         //start of an escape seq.
         if (s[i] == '\\') {
@@ -28,49 +28,58 @@ const char *  handleString(char *yytext){
                 char asciiChar = static_cast<char>(std::stoi(hexStr, nullptr, 16));
                 i += 3; //only +3 because the loop will add another 1
                 // handle the character
-                res += asciiChar;
+                str += asciiChar;
             }
             else if(i + 1 <= s.length() && s[i + 1] == '0')
             {
-                res += '\0';
+                str += '\0';
+                i++;
             }
             else if(i + 1 <= s.length() && s[i + 1] == 't')
             {
-                res += '\t';
+                str += '\t';
+                i++;
             }
             else if(i + 1 <= s.length() && s[i + 1] == 'r')
             {
-                res += '\r';
+                str += '\r';
+                i++;
             }
             else if(i + 1 <= s.length() && s[i + 1] == 'n')
             {
-                res += '\n';
+                str += '\n';
+                i++;
             }
             else if(i + 1 <= s.length() && s[i + 1] == '\"')
             {
-                res += '\"';
+                str += '\"';
+                i++;
             }
             else
             {
-                res += '\\';
+                str += '\\';
+                i++;
             }
         }
         else
         {
-            res += s[i];
+            str += s[i];
         }
     }
-    return res.c_str();
+    // std::cout << std::endl << res << std::endl << "end" << std::endl;
+    // return str.c_str();
 }
 
 int main() {
     enum tokentype token;
+    std::string str;
     // read tokens until the end of file is reached
     while ((token = static_cast<tokentype>(yylex()))) {
-        // your code here
         if(token == STRING) {
-            const char * text = handleString(yytext);
-            output::printToken(yylineno, token, text);
+            handleString(str, yytext);
+            // std::cout << str << std::endl;
+            output::printToken(yylineno, token, str.c_str());
+            str.clear();
         }
         else output::printToken(yylineno, token, yytext);
     }
