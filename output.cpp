@@ -53,7 +53,7 @@ void output::errorUnclosedString() {
 }
 
 void output::errorUndefinedEscape(const char *sequence) {
-    //std::cout << yytext << sequence << std::endl;
+    std::cout << yytext << std::endl;
     std::cout << "ERROR: Undefined escape sequence " << sequence << std::endl;
     exit(0);
 }

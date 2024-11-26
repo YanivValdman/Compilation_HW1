@@ -1,6 +1,8 @@
 %{
     #include "output.hpp"
     #include <iostream>
+    #include <string>
+    const char * handleInvalidHex();
 %}
 
 %option yylineno
@@ -58,7 +60,7 @@ continue                                            return CONTINUE;
 {id}                                                return ID;
 {num}                                               return NUM;
 {num_b}                                             return NUM_B;
-{comment}                                      return COMMENT;
+{comment}                                           return COMMENT;
 \"{legal_string}\"                                  return STRING;
 \"{legal_string}                                    output::errorUnclosedString();
 \"{legal_string}\\{illegal_hex_pattern}             output::errorUndefinedEscape("illegal_hex_pattern");
@@ -67,3 +69,7 @@ continue                                            return CONTINUE;
 .                                                   output::errorUnknownChar(*yytext);
 %%
 
+const char* handleInvalidHex()
+{
+    return "a";
+}
