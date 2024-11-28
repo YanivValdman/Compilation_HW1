@@ -96,7 +96,6 @@ void handleInvalidHexLexeme()
 void handleInvalidEscapeLexeme()
 {
     std::string lex = yytext;
-//    std::string seq;
     assert(lex[lex.length()-2] == '\\');
     output::errorUndefinedEscape(lex.substr(lex.length()-1).c_str());
 }
