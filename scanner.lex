@@ -63,7 +63,7 @@ continue                                            return CONTINUE;
 {comment}                                           return COMMENT;
 \"{legal_string}\"                                  return STRING;
 \"{legal_string}                                    output::errorUnclosedString();
-\"{legal_string}\\{illegal_hex_pattern}             {handleInvalidHexLexeme(); output::errorUndefinedEscape("illegal_hex_pattern");}
+\"{legal_string}\\{illegal_hex_pattern}             handleInvalidHexLexeme();
 \"{legal_string}\\{illegal_escape_pattern}          output::errorUndefinedEscape("illegal_escape_pattern");
 {whitespace}                                        ;
 .                                                   output::errorUnknownChar(*yytext);
@@ -72,19 +72,20 @@ continue                                            return CONTINUE;
 const char* handleInvalidHexLexeme()
 {
     std::string s = yytext;
-//    if(s[s.length() - 1] == 'x')
-//    {
-//        return "x";
-//    }
-//    if(s[s.length() - 2] == 'x')
-//    {
-//        return s.substr(s.length() - 2, 2);
-//    }
-//    if(s[s.length() - 3] == 'x')
-//    {
-//        return s.substr(s.length() - 3, 3);
-//    }
-    return "a";
-    std::cout << std::endl << "problem in handleInvalidHexLexeme. Exiting...";
+    std::string invalidSeq;
+    if(s[s.length() - 1] == 'x')
+    {
+        invalidSeq += 'x';
+    }
+    else if(s[s.length() - 2] == 'x')
+    {
+        invalidSeq += s.substr(s.length() - 2, 2);
+    }
+    else if(s[s.length() - 3] == 'x')
+    {
+        invalidSeq += s.substr(s.length() - 3, 3);
+    }
+    output::errorUndefinedEscape(invalidSeq.c_str());
+    std::cout << std::endl << "big problem in handleInvalidHexLexeme. Exiting...";
     exit(0);
 }
