@@ -2,7 +2,10 @@
     #include "output.hpp"
     #include <iostream>
     #include <string>
-    const char * handleInvalidHexLexeme();
+    #include <assert.h>
+    void handleInvalidHexLexeme();
+    void handleInvalidEscapeLexeme();
+
 %}
 
 %option yylineno
@@ -64,12 +67,12 @@ continue                                            return CONTINUE;
 \"{legal_string}\"                                  return STRING;
 \"{legal_string}                                    output::errorUnclosedString();
 \"{legal_string}\\{illegal_hex_pattern}             handleInvalidHexLexeme();
-\"{legal_string}\\{illegal_escape_pattern}          output::errorUndefinedEscape("illegal_escape_pattern");
+\"{legal_string}\\{illegal_escape_pattern}          handleInvalidEscapeLexeme();
 {whitespace}                                        ;
 .                                                   output::errorUnknownChar(*yytext);
 %%
 
-const char* handleInvalidHexLexeme()
+void handleInvalidHexLexeme()
 {
     std::string s = yytext;
     std::string invalidSeq;
@@ -88,4 +91,12 @@ const char* handleInvalidHexLexeme()
     output::errorUndefinedEscape(invalidSeq.c_str());
     std::cout << std::endl << "big problem in handleInvalidHexLexeme. Exiting...";
     exit(0);
+}
+
+void handleInvalidEscapeLexeme()
+{
+    std::string lex = yytext;
+//    std::string seq;
+    assert(lex[lex.length()-2] == '\\');
+    output::errorUndefinedEscape(lex.substr(lex.length()-1).c_str());
 }
