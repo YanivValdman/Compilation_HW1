@@ -27,8 +27,8 @@ printable_characters                ({ascii_x20_to_x21}|{ascii_x23_to_x5B}|{asci
 legal_hex_pattern                   (x[2-6][0-9a-fA-F]|x7[0-9a-eA-E])
 legal_escape_pattern                ([\\ntr\"0])
 legal_string                        ({printable_characters}|\\{legal_hex_pattern}|\\{legal_escape_pattern})*
-illegal_hex_range                   (x[2-6][^0-9a-fA-F]|x7[^0-9a-eA-E]|x[^2-7][0-9a-fA-F]|x[2-7][^0-9a-fA-F])
-illegal_hex_length                  (x|x[.])
+illegal_hex_range                   (x[2-6][^0-9a-fA-F]|x7[^0-9a-eA-E]|x[^2-7][0-9a-fA-F]|x[2-7][^0-9a-fA-F]|x[^2-7][^0-9a-fA-F])
+illegal_hex_length                  (x|x.)
 illegal_hex_pattern                 ({illegal_hex_range}|{illegal_hex_length})
 illegal_escape_pattern              ([^\\ntr\"0x])
 
@@ -87,6 +87,10 @@ void handleInvalidHexLexeme()
     else if(s[s.length() - 3] == 'x')
     {
         invalidSeq += s.substr(s.length() - 3, 3);
+    }
+    if(invalidSeq[invalidSeq.length() - 1] == '\"')
+    {
+        invalidSeq.pop_back();
     }
     output::errorUndefinedEscape(invalidSeq.c_str());
     std::cout << std::endl << "big problem in handleInvalidHexLexeme. Exiting...";
