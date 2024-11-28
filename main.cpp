@@ -7,9 +7,6 @@
 #define MIN_STR_LEN 2
 
 void  handleString(std::string& str, char *yytext){
-    // 1. Remove ""
-    // 2. transform hex pattern to matching ascii character (e.g the substring "\x23" should be printed as #)
-
     std::string s = yytext;
     // std::string res;
     // std::cout << s << std::endl;

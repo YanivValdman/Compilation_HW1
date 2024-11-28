@@ -2,7 +2,7 @@
     #include "output.hpp"
     #include <iostream>
     #include <string>
-    const char * handleInvalidHex();
+    const char * handleInvalidHexLexeme();
 %}
 
 %option yylineno
@@ -63,13 +63,28 @@ continue                                            return CONTINUE;
 {comment}                                           return COMMENT;
 \"{legal_string}\"                                  return STRING;
 \"{legal_string}                                    output::errorUnclosedString();
-\"{legal_string}\\{illegal_hex_pattern}             output::errorUndefinedEscape("illegal_hex_pattern");
+\"{legal_string}\\{illegal_hex_pattern}             {handleInvalidHexLexeme(); output::errorUndefinedEscape("illegal_hex_pattern");}
 \"{legal_string}\\{illegal_escape_pattern}          output::errorUndefinedEscape("illegal_escape_pattern");
 {whitespace}                                        ;
 .                                                   output::errorUnknownChar(*yytext);
 %%
 
-const char* handleInvalidHex()
+const char* handleInvalidHexLexeme()
 {
+    std::string s = yytext;
+//    if(s[s.length() - 1] == 'x')
+//    {
+//        return "x";
+//    }
+//    if(s[s.length() - 2] == 'x')
+//    {
+//        return s.substr(s.length() - 2, 2);
+//    }
+//    if(s[s.length() - 3] == 'x')
+//    {
+//        return s.substr(s.length() - 3, 3);
+//    }
     return "a";
+    std::cout << std::endl << "problem in handleInvalidHexLexeme. Exiting...";
+    exit(0);
 }
