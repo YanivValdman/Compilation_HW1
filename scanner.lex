@@ -23,10 +23,11 @@ num_b                               (0b|{num}b)
 ascii_x20_to_x21                    ([ !])
 ascii_x23_to_x5B                    ([#-\[])
 ascii_x5D_to_x7E                    ([\]-~])
+hex_whitespaces                     (x0A|x0a|x0C|x0c|x09)
 printable_characters                ({ascii_x20_to_x21}|{ascii_x23_to_x5B}|{ascii_x5D_to_x7E})
 legal_hex_pattern                   (x[2-6][0-9a-fA-F]|x7[0-9a-eA-E])
 legal_escape_pattern                ([\\ntr\"0])
-legal_string                        ({printable_characters}|\\{legal_hex_pattern}|\\{legal_escape_pattern})*
+legal_string                        ({printable_characters}|\\{legal_hex_pattern}|\\{legal_escape_pattern}|\\{hex_whitespaces})*
 illegal_hex_range                   (x[2-6][^0-9a-fA-F]|x7[^0-9a-eA-E]|x[^2-7][0-9a-fA-F]|x[2-7][^0-9a-fA-F]|x[^2-7][^0-9a-fA-F])
 illegal_hex_length                  (x|x.)
 illegal_hex_pattern                 ({illegal_hex_range}|{illegal_hex_length})
